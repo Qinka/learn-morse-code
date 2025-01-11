@@ -6,8 +6,11 @@ import boys from '../data/names_boys.json'
 import girls from '../data/names_girls.json'
 import trek from '../data/startrek.json'
 
+import morseCode from "../data/morse-code.json"
 
 const WordListPickerContext = React.createContext()
+
+const CodeList = Object.keys(morseCode).join('')
 
 function WordListPickerContextProvider(props) {
 
@@ -35,8 +38,17 @@ function WordListPickerContextProvider(props) {
         case "common100":
             wordList = common100.words
             break
+        case "random":
         default:
-            wordList = alphabet.words
+            const gen_words = []
+            for (var i = 0; i < 100; i++) {
+                let str = '';
+                for (var j = 0; j < 5; j++) {
+                    str += CodeList.charAt(Math.floor(Math.random() * CodeList.length));
+                }
+                gen_words.push(str)
+            }
+            wordList = gen_words
     }
 
     const wordListCountMax = wordList.length
@@ -47,21 +59,22 @@ function WordListPickerContextProvider(props) {
         'boys': {name: 'Boys Names', description: 'Popular Boys Names'},
         'girls': {name: 'Girls Names', description: 'Popular Girls Names'},
         'startrek': {name: 'Star Trek', description: 'Star Trek universe'},
-        'common100': {name: 'Common Words', description: '100 Most Common Words'}
+        'common100': {name: 'Common Words', description: '100 Most Common Words'},
+        'random': {name: "随机内容", description: '随机生成的 5 位长度字符串'}
     }
 
     // Shuffle input array and return
     function randomize(arr) {
         let array = [...arr]
         let currentIndex = array.length, temporaryValue, randomIndex;
-        
+
         // While there remain elements to shuffle...
         while (0 !== currentIndex) {
-        
+
             // Pick a remaining element...
             randomIndex = Math.floor(Math.random() * currentIndex);
             currentIndex -= 1;
-        
+
             // And swap it with the current element.
             temporaryValue = array[currentIndex];
             array[currentIndex] = array[randomIndex];
@@ -72,12 +85,12 @@ function WordListPickerContextProvider(props) {
 
     return (
         <WordListPickerContext.Provider value={{
-            wordList: wordList.slice(0,wordListCount), 
-            wordListShuffled: randomize(wordList).slice(0,wordListCount), 
-            wordListCategory: wordListCategory, 
-            setWordListCategory: setWordListCategory, 
-            metadata: metadata, 
-            wordListCount: wordListCount, 
+            wordList: wordList.slice(0,wordListCount),
+            wordListShuffled: randomize(wordList).slice(0,wordListCount),
+            wordListCategory: wordListCategory,
+            setWordListCategory: setWordListCategory,
+            metadata: metadata,
+            wordListCount: wordListCount,
             setWordListCount: setWordListCount,
             wordListCountMax: wordListCountMax
         }}>
