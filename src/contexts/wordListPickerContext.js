@@ -6,11 +6,12 @@ import boys from '../data/names_boys.json'
 import girls from '../data/names_girls.json'
 import trek from '../data/startrek.json'
 
-import morseCode from "../data/morse-code.json"
 
 const WordListPickerContext = React.createContext()
 
-const CodeList = Object.keys(morseCode).join('')
+const AlphaNumList = "abcdefghijklmnopqrstuvwxyz0123456789"
+const MarkList = ".,?!-/@()'\"&:;=+_$"
+const CodeList = AlphaNumList + MarkList
 
 function WordListPickerContextProvider(props) {
 
@@ -38,17 +39,29 @@ function WordListPickerContextProvider(props) {
         case "common100":
             wordList = common100.words
             break
-        case "random":
-        default:
+        case "random-word":
             const gen_words = []
-            for (var i = 0; i < 100; i++) {
+            for (let i = 0; i < 100; i++) {
                 let str = '';
-                for (var j = 0; j < 5; j++) {
-                    str += CodeList.charAt(Math.floor(Math.random() * CodeList.length));
+                for (let j = 0; j < 5; j++) {
+                    str += AlphaNumList.charAt(Math.floor(Math.random() * AlphaNumList.length));
                 }
                 gen_words.push(str)
             }
             wordList = gen_words
+            break
+
+        case "random":
+        default:
+            const gen_randoms = []
+            for (let i = 0; i < 100; i++) {
+                let str = '';
+                for (let j = 0; j < 5; j++) {
+                    str += CodeList.charAt(Math.floor(Math.random() * CodeList.length));
+                }
+                gen_randoms.push(str)
+            }
+            wordList = gen_randoms
     }
 
     const wordListCountMax = wordList.length
@@ -60,6 +73,7 @@ function WordListPickerContextProvider(props) {
         'girls': {name: 'Girls Names', description: 'Popular Girls Names'},
         'startrek': {name: 'Star Trek', description: 'Star Trek universe'},
         'common100': {name: 'Common Words', description: '100 Most Common Words'},
+        'random-word': {name: "随机内容(alphabet + number)", description: '随机生成的 5 位长度字符串'},
         'random': {name: "随机内容", description: '随机生成的 5 位长度字符串'}
     }
 
