@@ -73,8 +73,8 @@ function WordListPickerContextProvider(props) {
         'girls': {name: 'Girls Names', description: 'Popular Girls Names'},
         'startrek': {name: 'Star Trek', description: 'Star Trek universe'},
         'common100': {name: 'Common Words', description: '100 Most Common Words'},
-        'random-word': {name: "随机内容(alphabet + number)", description: '随机生成的 5 位长度字符串'},
-        'random': {name: "随机内容", description: '随机生成的 5 位长度字符串'}
+        'random-word': {name: "随机内容", description: '随机生成的 5 位长度字符串'},
+        'random': {name: "随机内容(alphabet + number)", description: '随机生成的 5 位长度字符串'}
     }
 
     // Shuffle input array and return

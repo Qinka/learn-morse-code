@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import config from '../config.json'
-import { WPMContext } from '../contexts/wpmContext.js';
-import { FrequencyContext } from '../contexts/frequencyContext.js';
+import { WPMContext } from '../contexts/wpmContext';
+import { FrequencyContext } from '../contexts/frequencyContext';
 
 export default (function useMorsePlayer() {
 
@@ -23,7 +23,7 @@ export default (function useMorsePlayer() {
     // Play dit or dah
     function play(ditDah) {
         let length = ((ditDah === '.') ? ditMaxTime : ditMaxTime*3)
-        
+
         if (context.state === 'interrupted') {
             context.resume()
         }
@@ -31,7 +31,7 @@ export default (function useMorsePlayer() {
         o = context.createOscillator()
         o.frequency.value = frequency
         o.type = "sine"
-        
+
         let startTime = context.currentTime;
 
         let g = context.createGain()
@@ -40,7 +40,7 @@ export default (function useMorsePlayer() {
         o.connect(g)
         g.connect(context.destination)
         o.start(startTime)
-        
+
         setTimeout(() => {
             g.gain.setTargetAtTime(0.0001, context.currentTime, 0.009)
             o.stop(context.currentTime + 0.05)
@@ -49,7 +49,7 @@ export default (function useMorsePlayer() {
 
     let queue = []
     let timeouts = []
-    
+
     function playMorseWord(morse) {
         // Empty morse queue and cancel all sounds (timeouts)
         queue = []
@@ -90,12 +90,12 @@ export default (function useMorsePlayer() {
                 delay += ditMaxTime*4
             } else if (char === ' ') {
                 timeouts.push(setTimeout(() => {
-                    
+
                 }, delay))
                 delay += ditMaxTime*2
             } else if (char === '/') {
                 timeouts.push(setTimeout(() => {
-                    
+
                 }, delay))
                 delay += ditMaxTime*6
             }
