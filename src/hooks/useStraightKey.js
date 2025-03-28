@@ -7,7 +7,7 @@ import config from '../config.json'
 
 // STRAIGHT KEY TELEGRAPH
 export default (function useStraightKey() {
-    
+
     const {morseCharBuffer, setMorseCharBuffer, morseWords, setMorseWords} = useContext(MorseBufferContext)
     const {wpm} = useContext(WPMContext)
     const {gameMode} = useContext(GameModeContext)
@@ -18,11 +18,11 @@ export default (function useStraightKey() {
     let charTime = 0
     let gapTimer = 0
     let gapTime = 0
-    
+
     // DitDah Length
     const ditMaxTime = 1200/wpm * 0.3
-    const letterGapMinTime = ditMaxTime*3
-    const wordGapMaxTime = ditMaxTime*7
+    const letterGapMinTime = ditMaxTime*3 * 0.3
+    const wordGapMaxTime = ditMaxTime*7 * 0.5
 
     const morseHistorySize = config.historySize
 
@@ -69,32 +69,32 @@ export default (function useStraightKey() {
             }
             else {
                 document.getElementById('morseButton').classList.add('active')
-    
+
                 // isRunning = true
-    
+
                 if (context.state === 'interrupted') {
                     context.resume()
                 }
-                
+
                 o = context.createOscillator()
                 o.frequency.value = frequency
                 o.type = "sine"
-                
+
                 g = context.createGain()
                 g.gain.exponentialRampToValueAtTime(config.mainVolume, context.currentTime)
                 o.connect(g)
                 g.connect(context.destination)
                 o.start()
-                 
+
                 checkGapBetweenInputs()
                 clearInterval(gapTimer)
-    
+
                 startCharTimer()
             }
         }
-        
+
     }
-    
+
     function startCharTimer() {
         // Start Character Timer
         charTimer = setInterval(() => {
@@ -114,18 +114,18 @@ export default (function useStraightKey() {
             document.getElementById('morseButton').classList.remove('active')
 
             isRunning = false
-            
+
             if (charTime <= ditMaxTime) {
                 setMorseCharBuffer(prev => prev + '.')
             } else {
                 setMorseCharBuffer(prev => prev + '-')
             }
-    
+
             stopCharTimer()
             startGapTimer()
-            
+
             // Account for bug triggered when pressing paddle button (e.g.) outside of body, then clicking into body, and depressing key
-            if (o === undefined) { 
+            if (o === undefined) {
                 return
             }
             if (o.context.state === 'running') {
@@ -135,7 +135,7 @@ export default (function useStraightKey() {
         } else { return }
     }
 
-    function stopCharTimer() {    
+    function stopCharTimer() {
         clearInterval(charTimer)
         charTimer = 0
         charTime = 0
@@ -174,7 +174,7 @@ export default (function useStraightKey() {
             gapTimer = 0
         }
     }
-    
+
     // Add paddle event listeners and update on WPM, Game Mode, or Frequency change
     // Not updating on these state changes prevents change from taking effect
     useEffect(() => {

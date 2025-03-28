@@ -39,16 +39,27 @@ function WordListPickerContextProvider(props) {
         case "common100":
             wordList = common100.words
             break
-        case "random-word":
-            const gen_words = []
+        case "random-word-5":
+            const gen_words_5 = []
             for (let i = 0; i < 100; i++) {
                 let str = '';
                 for (let j = 0; j < 5; j++) {
                     str += AlphaNumList.charAt(Math.floor(Math.random() * AlphaNumList.length));
                 }
-                gen_words.push(str)
+                gen_words_5.push(str)
             }
-            wordList = gen_words
+            wordList = gen_words_5
+            break
+        case "random-word-10":
+            const gen_words_10 = []
+            for (let i = 0; i < 100; i++) {
+                let str = '';
+                for (let j = 0; j < 10; j++) {
+                    str += AlphaNumList.charAt(Math.floor(Math.random() * AlphaNumList.length));
+                }
+                gen_words_10.push(str)
+            }
+            wordList = gen_words_10
             break
 
         case "random":
@@ -73,7 +84,8 @@ function WordListPickerContextProvider(props) {
         'girls': {name: 'Girls Names', description: 'Popular Girls Names'},
         'startrek': {name: 'Star Trek', description: 'Star Trek universe'},
         'common100': {name: 'Common Words', description: '100 Most Common Words'},
-        'random-word': {name: "随机内容", description: '随机生成的 5 位长度字符串'},
+        'random-word-5': {name: "随机内容-5", description: '随机生成的 5 位长度字符串'},
+        'random-word-10': {name: "随机内容-10", description: '随机生成的 10 位长度字符串'},
         'random': {name: "随机内容(alphabet + number)", description: '随机生成的 5 位长度字符串'}
     }
 

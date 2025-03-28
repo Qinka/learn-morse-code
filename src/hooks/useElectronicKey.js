@@ -17,11 +17,11 @@ export default (function useElectronicKey() {
     // DitDah length setup
     let ditMaxTime = 1200/wpm
     let ratio = .2
-    const letterGapMinTime = ditMaxTime*ratio*3
-    const wordGapMaxTime = ditMaxTime*ratio*7
+    const letterGapMinTime = ditMaxTime*3 * 0.3
+    const wordGapMaxTime = ditMaxTime*7 * 0.5
 
     const morseHistorySize = config.historySize
-    
+
     let leftIsPressed = false
     let rightIsPressed = false
     let queueRunning = false
@@ -59,24 +59,24 @@ export default (function useElectronicKey() {
             if (context.state === 'interrupted') {
                 context.resume()
             }
-            
+
             let o = context.createOscillator()
             o.frequency.value = frequency
             o.type = "sine"
             o.onended = () => {
                 resolve()
             }
-            
+
             let startTime = context.currentTime;
-    
+
             let g = context.createGain()
             g.gain.exponentialRampToValueAtTime(config.mainVolume, startTime)
             g.gain.setValueAtTime(config.mainVolume, startTime)
             o.connect(g)
             g.connect(context.destination)
-            
+
             o.start(startTime)
-            
+
             setTimeout(() => {
                 g.gain.setTargetAtTime(0.0001, context.currentTime, 0.001)
                 o.stop(context.currentTime + 0.05)
@@ -94,13 +94,13 @@ export default (function useElectronicKey() {
                 clearInterval(gapTimer)
                 checkGapBetweenInputs()
                 setMorseCharBuffer(prev => prev + ditDah)
-                
+
                 play(ditDah)
                 .then(setTimeout(() => {
                     // START GAP TIMER
                     gapTimer = setInterval(() => {
                         gapTime += 1
-    
+
                         // if (gapTime >= wordGapMaxTime) {
                         if (gameMode === 'practice' && gapTime >= wordGapMaxTime) {
                             setMorseCharBuffer(prev => prev + '/')
@@ -115,7 +115,7 @@ export default (function useElectronicKey() {
                             gapTime = 0
                         }
                     }, 1)
-                    
+
                     resolve();
                 }, delay)
                 )
@@ -129,7 +129,7 @@ export default (function useElectronicKey() {
 
     function executeQueue() {
         let localQueue = queue
-        
+
         // Set waitTime to completion of queue (ditDah time + following silences)
         let waitTime = 0
         for (let i in localQueue) {
@@ -139,19 +139,19 @@ export default (function useElectronicKey() {
                 waitTime += ditMaxTime*4
             }
         }
-        
+
         // Cleanup
         function cleanup() {
             queueRunning = false
             queue = []
             sendPressedToQueue() // Check if anything still pressed down on queue finish
         }
-        
+
         // Wait till completion of queue to execute
         const clear = setTimeout(() => {
             cleanup()
         }, waitTime)
-        
+
         // Execute queue
         queueRunning = true
         for (let i = 0; i < localQueue.length; i++) {
@@ -212,7 +212,7 @@ export default (function useElectronicKey() {
 
         if (event.keyCode === 188 || event.target.id === "left") {
             document.querySelector('.paddle#left').classList.add('active')
-            
+
             leftIsPressed = true
             if (!rightIsPressed) { pressedFirst = 'left'}
 
@@ -265,7 +265,7 @@ export default (function useElectronicKey() {
             });
         }
     }
-    
+
     // Timer used to determine if both paddles are released within 10ms
     // Need to know this to stop Iambic tones at correct time
     function startDepressSyncTimer() {
